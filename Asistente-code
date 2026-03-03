@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glosario de Respuestas - Clínica Dermatológica</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        
+        /* Ocultar barra de scroll en navegación pero permitir scroll */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Ajuste para el scroll en la columna derecha contemplando las dos barras superiores */
+        .scroll-mt-36 { scroll-margin-top: 9rem; }
+    </style>
+</head>
+<body class="text-slate-800 antialiased h-screen flex flex-col overflow-hidden">
+
+    <!-- 1. BARRA PRINCIPAL (Logo y Personalización) -->
+    <nav class="bg-white shadow-sm z-50 border-b border-slate-200 h-16 flex-shrink-0 flex items-center px-4 justify-between relative">
+        <!-- Botón Menú Móvil -->
+        <button onclick="toggleSidebar()" class="lg:hidden p-2 -ml-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors">
+            <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+
+        <!-- Logo -->
+        <div class="flex items-center gap-2 lg:w-1/4">
+            <i data-lucide="plus-square" class="w-6 h-6 text-rose-600"></i>
+            <span class="font-bold text-slate-800 tracking-tight hidden sm:block">Clínica Dermatológica</span>
+        </div>
+        
+        <!-- INYECTOR DE NOMBRES (Personalización Automática) -->
+        <div class="flex-1 flex justify-end lg:justify-center">
+            <div class="relative flex items-center w-full max-w-xs group">
+                <i data-lucide="user-plus" class="w-4 h-4 absolute left-3 text-rose-400 group-focus-within:text-rose-600 transition-colors"></i>
+                <input type="text" id="patientNameInput" placeholder="Escribe el nombre del paciente..." autocomplete="off"
+                    class="w-full pl-9 pr-4 py-2 rounded-full bg-slate-100 border-transparent focus:bg-white focus:border-rose-300 focus:ring-2 focus:ring-rose-200 text-sm font-medium transition-all outline-none shadow-inner text-slate-700 placeholder:text-slate-400">
+            </div>
+        </div>
+        
+        <div class="hidden lg:block lg:w-1/4"></div> <!-- Spacer right -->
+    </nav>
+
+    <!-- 2. SUB-BARRA DE NAVEGACIÓN (Accesos Rápidos) -->
+    <div class="bg-white/95 backdrop-blur-sm border-b border-slate-200 h-12 flex items-center px-4 overflow-x-auto no-scrollbar shadow-sm z-40 flex-shrink-0 gap-2">
+        <a href="#inicio" class="whitespace-nowrap px-3 py-1.5 rounded-full bg-slate-50 text-slate-600 text-xs font-bold hover:bg-rose-50 hover:text-rose-600 transition-colors border border-slate-200">👋 Inicio</a>
+        <a href="#bioestimuladores" class="whitespace-nowrap px-3 py-1.5 rounded-full bg-slate-50 text-slate-600 text-xs font-bold hover:bg-rose-50 hover:text-rose-600 transition-colors border border-slate-200">✨ Bioestimuladores</a>
+        <a href="#toxina" class="whitespace-nowrap px-3 py-1.5 rounded-full bg-slate-50 text-slate-600 text-xs font-bold hover:bg-rose-50 hover:text-rose-600 transition-colors border border-slate-200">💉 Toxina</a>
+        <a href="#papada" class="whitespace-nowrap px-3 py-1.5 rounded-full bg-slate-50 text-slate-600 text-xs font-bold hover:bg-rose-50 hover:text-rose-600 transition-colors border border-slate-200">👤 Papada</a>
+        <a href="#cabello" class="whitespace-nowrap px-3 py-1.5 rounded-full bg-slate-50 text-slate-600 text-xs font-bold hover:bg-rose-50 hover:text-rose-600 transition-colors border border-slate-200">💇‍♂️ Cabello</a>
+        <a href="#acne" class="whitespace-nowrap px-3 py-1.5 rounded-full bg-slate-50 text-slate-600 text-xs font-bold hover:bg-rose-50 hover:text-rose-600 transition-colors border border-slate-200">🧖‍♀️ Piel</a>
+        <a href="#rescate" class="whitespace-nowrap px-3 py-1.5 rounded-full bg-indigo-50 text-indigo-700 text-xs font-bold hover:bg-indigo-100 transition-colors border border-indigo-200">⏳ Rescate (Seguimiento)</a>
+        <a href="#pagos" class="whitespace-nowrap px-3 py-1.5 rounded-full bg-slate-50 text-slate-600 text-xs font-bold hover:bg-rose-50 hover:text-rose-600 transition-colors border border-slate-200">💳 Cierre y Pagos</a>
+    </div>
+
+    <!-- LAYOUT PRINCIPAL (2 COLUMNAS) -->
+    <div class="flex flex-1 overflow-hidden relative">
+        
+        <!-- FONDO OSCURO PARA MENÚ MÓVIL -->
+        <div id="sidebar-backdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 hidden transition-opacity opacity-0 lg:hidden"></div>
+
+        <!-- COLUMNA IZQUIERDA: RECORDATORIOS (Protocolos) -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-4/5 max-w-sm transform -translate-x-full lg:relative lg:translate-x-0 transition-transform duration-300 ease-in-out bg-slate-900 text-slate-300 overflow-y-auto border-r border-slate-800 p-6 space-y-8 flex flex-col h-full lg:w-1/4 lg:block shadow-2xl lg:shadow-none">
+            
+            <!-- Header Móvil del Sidebar -->
+            <div class="flex justify-between items-center lg:hidden border-b border-slate-800 pb-4">
+                <span class="font-bold text-white text-lg flex items-center gap-2">
+                    <i data-lucide="clipboard-list" class="w-5 h-5 text-rose-500"></i> Protocolos
+                </span>
+                <button onclick="toggleSidebar()" class="p-2 bg-slate-800 rounded-lg text-slate-400 hover:text-white transition-colors">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Bloque 1: Reglas de Oro -->
+            <div>
+                <h3 class="text-amber-400 font-bold uppercase text-xs tracking-wider mb-3 flex items-center gap-2">
+                    <i data-lucide="shield-alert" class="w-4 h-4"></i> Reglas de Oro
+                </h3>
+                <div class="space-y-3">
+                    <div class="bg-blue-900/40 p-3 rounded-lg border border-blue-700/50">
+                        <p class="text-sm text-blue-200 font-medium mb-1 flex items-center gap-2">
+                            <i data-lucide="folder-search" class="w-4 h-4"></i> Paciente Recurrente
+                        </p>
+                        <p class="text-xs leading-relaxed text-blue-100/80">Si ya es paciente y pide cita, <span class="text-white font-bold underline">revisar SIEMPRE el expediente</span> para confirmar su tratamiento.</p>
+                    </div>
+
+                    <div class="bg-purple-900/40 p-3 rounded-lg border border-purple-700/50">
+                        <p class="text-sm text-purple-200 font-medium mb-1 flex items-center gap-2">
+                            <i data-lucide="users" class="w-4 h-4"></i> 2 Pacientes - Misma Hora
+                        </p>
+                        <p class="text-xs leading-relaxed text-purple-100/80">Marcar opción <span class="text-white font-bold bg-purple-600/50 px-1 rounded">"RECARGO"</span> en uno de ellos.</p>
+                    </div>
+
+                    <div class="bg-teal-900/40 p-3 rounded-lg border border-teal-700/50">
+                        <p class="text-sm text-teal-200 font-medium mb-1 flex items-center gap-2">
+                            <i data-lucide="briefcase" class="w-4 h-4"></i> Vendedores
+                        </p>
+                        <p class="text-xs leading-relaxed text-teal-100/80">Citas solo <span class="text-white font-bold">Lunes o Martes</span>. Registrar como "Control".</p>
+                    </div>
+
+                    <div class="bg-amber-900/30 p-3 rounded-lg border border-amber-800/50">
+                        <p class="text-sm text-amber-200 font-medium mb-1">Cosmelan = FOTO 📸</p>
+                        <p class="text-xs leading-relaxed text-amber-100/80">Indagar tipo de mancha y pedir foto antes del precio.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bloque 2: Identidad -->
+            <div>
+                <h3 class="text-rose-400 font-bold uppercase text-xs tracking-wider mb-3 flex items-center gap-2">
+                    <i data-lucide="fingerprint" class="w-4 h-4"></i> Identidad & Tono
+                </h3>
+                <div class="space-y-3">
+                    <div class="bg-slate-800 p-3 rounded-lg border border-slate-700">
+                        <p class="text-sm text-white font-medium mb-1">Efecto "Espejo"</p>
+                        <p class="text-xs leading-relaxed opacity-80">El paciente debe sentir que habla con el equipo médico cercano ("nos encontrábamos en atención").</p>
+                    </div>
+                    <div class="bg-slate-800 p-3 rounded-lg border border-slate-700">
+                        <p class="text-sm text-white font-medium mb-1">Siempre "USTED"</p>
+                        <p class="text-xs leading-relaxed opacity-80">🚫 Prohibido tutear. Mantén cercanía con respeto.</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- COLUMNA DERECHA: GLOSARIO (Scrollable) -->
+        <main class="w-full lg:w-3/4 bg-slate-50 overflow-y-auto p-4 md:p-8 space-y-12 scroll-smooth">
+
+            <!-- SECCIÓN: INICIO -->
+            <section id="inicio" class="scroll-mt-36">
+                <div class="flex items-center gap-2 mb-4 text-rose-700 border-b border-rose-200 pb-2">
+                    <i data-lucide="message-circle" class="w-6 h-6"></i>
+                    <h2 class="text-xl font-bold uppercase tracking-wide">Inicio & Bienvenida</h2>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 group hover:border-rose-300 transition-all flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-slate-800 mb-2 text-sm uppercase text-slate-500">👋 Saludo Estándar</h3>
+                            <div class="bg-slate-50 p-4 rounded-lg text-sm text-slate-700 font-mono mb-4 border border-slate-100 leading-relaxed">¡Buenas tardes, <span class="name-target font-bold text-rose-600 bg-rose-50 px-1 rounded">[Nombre]</span>! 👋🏻 Le atiende el equipo de la Clínica Dermatológica 🏥. ¡Muchas gracias por la espera! Nuestros especialistas se encontraban atendiendo pacientes 🩺.<br><br>Para brindarle una atención más personalizada, ¿con quién tengo el gusto? ⁉️</div>
+                        </div>
+                        <button onclick="copyToClipboard(this)" class="w-full bg-white border-2 border-slate-200 hover:border-rose-600 hover:text-rose-600 text-slate-600 py-2 rounded-lg flex justify-center items-center gap-2 transition-all text-sm font-bold">
+                            <i data-lucide="copy" class="w-4 h-4"></i> Copiar
+                        </button>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 group hover:border-rose-300 transition-all flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-slate-800 mb-2 text-sm uppercase text-slate-500">📋 Menú de Servicios</h3>
+                            <div class="bg-slate-50 p-4 rounded-lg text-sm text-slate-700 font-mono mb-4 border border-slate-100 leading-relaxed">¡Hola, <span class="name-target font-bold text-rose-600 bg-rose-50 px-1 rounded">[Nombre]</span>! Gracias por su interés. ¿Me podría indicar en cuál de nuestros tratamientos está interesada/o?<br><br>• Toxina botulínica<br>• Bioestimuladores<br>• Exosomas<br>• Remoción de manchas<br>• Terapias regenerativas<br><br>Así podré brindarle la información exacta y resolver todas sus dudas. 😊</div>
+                        </div>
+                        <button onclick="copyToClipboard(this)" class="w-full bg-white border-2 border-slate-200 hover:border-rose-600 hover:text-rose-600 text-slate-600 py-2 rounded-lg flex justify-center items-center gap-2 transition-all text-sm font-bold">
+                            <i data-lucide="copy" class="w-4 h-4"></i> Copiar
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECCIÓN: BIOESTIMULADORES -->
+            <section id="bioestimuladores" class="scroll-mt-36">
+                <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
+                    <div class="flex items-center gap-2 text-rose-700">
+                        <i data-lucide="sparkles" class="w-6 h-6"></i>
+                        <h2 class="text-xl font-bold uppercase tracking-wide">Bioestimuladores</h2>
+                    </div>
+                    <span class="bg-rose-100 text-rose-800 text-sm px-4 py-1.5 rounded-full font-bold shadow-sm">Promo: $450 | Tensor: $650</span>
+                </div>
+
+                <div class="mb-4 space-y-2">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 bg-slate-100 rounded text-xs font-semibold text-slate-600 border border-slate-200">
+                        <i data-lucide="tag" class="w-3 h-3"></i> Marcas: Radiesse, Sculptra
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 border-l-4 border-l-rose-500">
+                    <h3 class="font-bold text-slate-800 mb-1">Respuesta Completa (Explicación + Diagnóstico)</h3>
+                    <div class="bg-slate-50 p-4 rounded-lg text-sm text-slate-700 font-mono mb-4 border border-slate-100 leading-relaxed mt-3">Excelente elección, <span class="name-target font-bold text-rose-600 bg-rose-50 px-1 rounded">[Nombre]</span>. Los bioestimuladores nos gustan mucho porque no son simples rellenos; lo que hacen es activar sus propias células para producir colágeno nuevo, recuperando la firmeza de forma natural.<br><br>Para recomendarle el protocolo ideal, nos gustaría conocer unos detalles:<br><br>1. ¿Qué edad tiene?<br>2. ¿Qué zona desea trabajar (rostro, cuello, abdomen)?<br>3. ¿Cómo considera su consumo de agua diario? 💧<br>4. ¿De qué lugar nos escribe? 📍</div>
+                    <button onclick="copyToClipboard(this)" class="w-full bg-slate-800 hover:bg-rose-600 text-white py-3 rounded-lg flex justify-center items-center gap-2 transition-all text-sm font-medium shadow-md shadow-slate-200">
+                        <i data-lucide="copy" class="w-4 h-4"></i> Copiar Mensaje
+                    </button>
+                </div>
+            </section>
+
+            <!-- SECCIÓN: TOXINA -->
+            <section id="toxina" class="scroll-mt-36">
+                <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
+                    <div class="flex items-center gap-2 text-rose-700">
+                        <i data-lucide="syringe" class="w-6 h-6"></i>
+                        <h2 class="text-xl font-bold uppercase tracking-wide">Toxina Botulínica</h2>
+                    </div>
+                    <span class="bg-rose-100 text-rose-800 text-sm px-4 py-1.5 rounded-full font-bold shadow-sm">Promo Feb: $250</span>
+                </div>
+
+                <div class="mb-4 space-y-2">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 bg-slate-100 rounded text-xs font-semibold text-slate-600 border border-slate-200">
+                        <i data-lucide="tag" class="w-3 h-3"></i> Marcas: Dysport, Xeomin (Merz)
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <h3 class="font-bold text-slate-800 mb-2">Respuesta Estándar</h3>
+                    <div class="bg-slate-50 p-4 rounded-lg text-sm text-slate-700 font-mono mb-4 border border-slate-100 leading-relaxed">Perfecto, <span class="name-target font-bold text-rose-600 bg-rose-50 px-1 rounded">[Nombre]</span>. La toxina es ideal para relajar esos músculos que marcan las líneas de expresión, logrando una mirada mucho más descansada y fresca sin perder su naturalidad.<br><br>¿Es la primera vez que se realizaría este procedimiento o ya lo conoce? ¿Hay alguna arruguita en particular que le moleste al verse al espejo?</div>
+                    <button onclick="copyToClipboard(this)" class="w-full bg-slate-800 hover:bg-rose-600 text-white py-3 rounded-lg flex justify-center items-center gap-2 transition-all text-sm font-medium shadow-md shadow-slate-200">
+                        <i data-lucide="copy" class="w-4 h-4"></i> Copiar Mensaje
+                    </button>
+                </div>
+            </section>
+
+            <!-- SECCIÓN: PAPADA -->
+            <section id="papada" class="scroll-mt-36">
+                <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
+                    <div class="flex items-center gap-2 text-rose-700">
+                        <i data-lucide="user" class="w-6 h-6"></i>
+                        <h2 class="text-xl font-bold uppercase tracking-wide">Papada</h2>
+                    </div>
+                    <span class="bg-amber-100 text-amber-800 text-sm px-4 py-1.5 rounded-full font-bold shadow-sm border border-amber-200">⚠️ Requiere Valoración (₡35.000)</span>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <h3 class="font-bold text-slate-800 mb-2">Diagnóstico Inicial (No dar precio)</h3>
+                    <div class="bg-slate-50 p-4 rounded-lg text-sm text-slate-700 font-mono mb-4 border border-slate-100 leading-relaxed">Comprendo totalmente, <span class="name-target font-bold text-rose-600 bg-rose-50 px-1 rounded">[Nombre]</span>, es una zona que solemos tratar con mucho éxito sin necesidad de cirugía, usando enzimas o aparatología especializada.<br><br>Para poder orientarle mejor, ¿usted siente que es más un tema de volumen (grasita) o nota más bien flacidez en la piel? ¿Hace cuánto tiempo nota este cambio?</div>
+                    <button onclick="copyToClipboard(this)" class="w-full bg-slate-800 hover:bg-rose-600 text-white py-3 rounded-lg flex justify-center items-center gap-2 transition-all text-sm font-medium shadow-md shadow-slate-200">
+                        <i data-lucide="copy" class="w-4 h-4"></i> Copiar Mensaje
+                    </button>
+                </div>
+            </section>
+
+            <!-- SECCIÓN: CABELLO -->
+            <section id="cabello" class="scroll-mt-36">
+                <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
+                    <div class="flex items-center gap-2 text-rose-700">
+                        <i data-lucide="scissors" class="w-6 h-6"></i>
+                        <h2 class="text-xl font-bold uppercase tracking-wide">Alopecia / Cabello</h2>
+                    </div>
+                    <span class="bg-amber-100 text-amber-800 text-sm px-4 py-1.5 rounded-full font-bold shadow-sm border border-amber-200">⚠️ Requiere Valoración</span>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <h3 class="font-bold text-slate-800 mb-2">Diagnóstico Inicial</h3>
+                    <div class="bg-slate-50 p-4 rounded-lg text-sm text-slate-700 font-mono mb-4 border border-slate-100 leading-relaxed">Entiendo su preocupación, <span class="name-target font-bold text-rose-600 bg-rose-50 px-1 rounded">[Nombre]</span>. Trabajamos con tratamientos regenerativos muy efectivos que estimulan el folículo para frenar la caída y fortalecer el cabello nuevo.<br><br>Para tener un mejor contexto: ¿Siente que la caída es general en toda la cabeza o ha notado zonas específicas (huequitos)? ¿Hace cuánto tiempo comenzó el problema?</div>
+                    <button onclick="copyToClipboard(this)" class="w-full bg-slate-800 hover:bg-rose-600 text-white py-3 rounded-lg flex justify-center items-center gap-2 transition-all text-sm font-medium shadow-md shadow-slate-200">
+                        <i data-lucide="copy" class="w-4 h-4"></i> Copiar Mensaje
+                    </button>
+                </div>
+            </section>
+
+            <!-- SECCIÓN: PIEL (Acné/Manchas) -->
+            <section id="acne" class="scroll-mt-36">
+                <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
+                    <div class="flex items-center gap-2 text-rose-700">
+                        <i data-lucide="smile" class="w-6 h-6"></i>
+                        <h2 class="text-xl font-bold uppercase tracking-wide">Acné y Manchas</h2>
+                    </div>
+                    <span class="bg-slate-100 text-slate-600 text-sm px-4 py-1.5 rounded-full font-bold shadow-sm">$400 - $600 aprox</span>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <h3 class="font-bold text-slate-800 mb-2">Respuesta Inicial</h3>
+                    <div class="bg-slate-50 p-4 rounded-lg text-sm text-slate-700 font-mono mb-4 border border-slate-100 leading-relaxed">Es un placer poder atenderle, <span class="name-target font-bold text-rose-600 bg-rose-50 px-1 rounded">[Nombre]</span>. Abordamos estos casos cuidando la salud de su piel primero, para controlar brotes y unificar el tono.<br><br>Cuénteme un poco más: ¿El problema es solo en el rostro o también en espalda/pecho? En el caso de las manchas, ¿sabe si aparecieron por sol, embarazo o secuelas de acné anterior?</div>
+                    <button onclick="copyToClipboard(this)" class="w-full bg-slate-800 hover:bg-rose-600 text-white py-3 rounded-lg flex justify-center items-center gap-2 transition-all text-sm font-medium shadow-md shadow-slate-200">
+                        <i data-lucide="copy" class="w-4 h-4"></i> Copiar Mensaje
+                    </button>
+                </div>
+            </section>
+
+            <!-- NUEVA SECCIÓN: RESCATE (Seguimiento RCP) -->
+            <section id="rescate" class="scroll-mt-36">
+                <div class="flex items-center gap-2 mb-6 text-indigo-700 border-b border-indigo-200 pb-2">
+                    <i data-lucide="life-buoy" class="w-6 h-6"></i>
+                    <h2 class="text-xl font-bold uppercase tracking-wide">Seguimiento y Rescate (RCP)</h2>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-4">
+                    <!-- Rescate 1: En visto tras precio -->
+                    <div class="bg-indigo-50/50 p-5 rounded-xl shadow-sm border border-indigo-100 group">
+                        <h3 class="font-bold text-indigo-900 mb-2 text-sm flex items-center gap-2">
+                            <i data-lucide="eye" class="w-4 h-4 text-indigo-500"></i> Paciente en "Visto" (Tras Precio)
+                        </h3>
+                        <p class="text-xs text-slate-500 mb-3">Envíalo 48h después. Objetivo: Bajar defensas.</p>
+                        <div class="bg-white p-4 rounded-lg text-sm text-slate-700 font-mono mb-4 border border-indigo-100 leading-relaxed">Hola <span class="name-target font-bold text-rose-600 bg-rose-50 px-1 rounded">[Nombre]</span>, quería pasar a saludarle. Entiendo que este tratamiento es una inversión importante y mi intención es que se sienta totalmente segura/o. ¿Tiene alguna duda sobre el procedimiento que le gustaría que nuestro equipo médico le aclare?</div>
+                        <button onclick="copyToClipboard(this)" class="w-full bg-white border-2 border-indigo-200 hover:border-indigo-600 hover:text-indigo-700 text-indigo-600 py-2 rounded-lg flex justify-center items-center gap-2 transition-all text-sm font-bold">
+                            <i data-lucide="copy" class="w-4 h-4"></i> Copiar Reactivación
+                        </button>
+                    </div>
+
+                    <!-- Rescate 2: Recurrente Mantenimiento -->
+                    <div class="bg-indigo-50/50 p-5 rounded-xl shadow-sm border border-indigo-100 group">
+                        <h3 class="font-bold text-indigo-900 mb-2 text-sm flex items-center gap-2">
+                            <i data-lucide="calendar-clock" class="w-4 h-4 text-indigo-500"></i> Paciente Recurrente (Agendar)
+                        </h3>
+                        <p class="text-xs text-slate-500 mb-3">Para mantenimientos o seguimientos pendientes.</p>
+                        <div class="bg-white p-4 rounded-lg text-sm text-slate-700 font-mono mb-4 border border-indigo-100 leading-relaxed">¡Hola <span class="name-target font-bold text-rose-600 bg-rose-50 px-1 rounded">[Nombre]</span>! ¿Cómo ha estado? Estaba revisando su expediente clínico y noté que ya es tiempo de su sesión de control para mantener esos excelentes resultados. ¿Le gustaría que le comparta los horarios que tenemos disponibles esta semana?</div>
+                        <button onclick="copyToClipboard(this)" class="w-full bg-white border-2 border-indigo-200 hover:border-indigo-600 hover:text-indigo-700 text-indigo-600 py-2 rounded-lg flex justify-center items-center gap-2 transition-all text-sm font-bold">
+                            <i data-lucide="copy" class="w-4 h-4"></i> Copiar Seguimiento
+                        </button>
+                    </div>
+
+                    <!-- Rescate 3: Cierre Definitivo -->
+                    <div class="bg-slate-100 p-5 rounded-xl shadow-sm border border-slate-200 group md:col-span-2">
+                        <h3 class="font-bold text-slate-700 mb-2 text-sm flex items-center gap-2">
+                            <i data-lucide="door-closed" class="w-4 h-4 text-slate-500"></i> Soltar (Sin respuesta tras 2 intentos)
+                        </h3>
+                        <p class="text-xs text-slate-500 mb-3">Cierre educado. Protege tu energía y deja la puerta abierta.</p>
+                        <div class="bg-white p-4 rounded-lg text-sm text-slate-700 font-mono mb-4 border border-slate-200 leading-relaxed">Hola <span class="name-target font-bold text-rose-600 bg-rose-50 px-1 rounded">[Nombre]</span>, paso a saludarle brevemente. Como no hemos tenido respuesta, dejaremos su expediente en pausa por ahora para no saturarle de mensajes. Si en un futuro desea retomar su atención, aquí estaremos encantados de recibirle. ¡Que tenga una excelente semana! 😊</div>
+                        <button onclick="copyToClipboard(this)" class="w-full bg-white border-2 border-slate-200 hover:border-slate-500 hover:text-slate-700 text-slate-600 py-2 rounded-lg flex justify-center items-center gap-2 transition-all text-sm font-bold">
+                            <i data-lucide="copy" class="w-4 h-4"></i> Copiar Despedida
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECCIÓN: CIERRE Y PAGOS -->
+            <section id="pagos" class="scroll-mt-36 pb-32">
+                <div class="flex items-center gap-2 mb-6 text-rose-700 border-b border-rose-200 pb-2">
+                    <i data-lucide="check-circle" class="w-6 h-6"></i>
+                    <h2 class="text-xl font-bold uppercase tracking-wide">Cierre y Pagos</h2>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                        <h3 class="font-bold text-slate-800 mb-2">✅ Cierre (Listo para agendar)</h3>
+                        <div class="bg-slate-50 p-4 rounded-lg text-sm text-slate-700 font-mono mb-4 border border-slate-100 leading-relaxed">Me parece que este tratamiento le daría excelentes resultados, <span class="name-target font-bold text-rose-600 bg-rose-50 px-1 rounded">[Nombre]</span>. Si gusta, podemos buscar un espacio en la agenda para valorarle y empezar. ¿Qué día de esta semana le queda mejor?</div>
+                        <button onclick="copyToClipboard(this)" class="w-full bg-slate-800 hover:bg-rose-600 text-white py-3 rounded-lg flex justify-center items-center gap-2 transition-all text-sm font-medium">
+                            <i data-lucide="copy" class="w-4 h-4"></i> Copiar
+                        </button>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                        <h3 class="font-bold text-slate-800 mb-2">🩺 Cierre (Valoración)</h3>
+                        <div class="bg-slate-50 p-4 rounded-lg text-sm text-slate-700 font-mono mb-4 border border-slate-100 leading-relaxed">Para este caso en específico, <span class="name-target font-bold text-rose-600 bg-rose-50 px-1 rounded">[Nombre]</span>, lo más responsable es que el especialista le vea personalmente. La consulta tiene una inversión de ₡35,000 e incluye productos especializados para casa. ¿Le gustaría que le ofrezca los espacios disponibles?</div>
+                        <button onclick="copyToClipboard(this)" class="w-full bg-slate-800 hover:bg-rose-600 text-white py-3 rounded-lg flex justify-center items-center gap-2 transition-all text-sm font-medium">
+                            <i data-lucide="copy" class="w-4 h-4"></i> Copiar
+                        </button>
+                    </div>
+
+                    <!-- Métodos de Pago (No lleva nombre) -->
+                    <div class="bg-slate-800 text-white p-6 rounded-xl shadow-xl shadow-slate-300 md:col-span-2 relative overflow-hidden group">
+                        <div class="absolute -right-10 -top-10 bg-rose-600 rounded-full w-32 h-32 opacity-20 group-hover:scale-150 transition-transform duration-500"></div>
+                        <h3 class="font-bold text-white mb-2 flex items-center gap-2 relative z-10">
+                            <i data-lucide="wallet" class="w-5 h-5 text-rose-400"></i> Métodos de Pago
+                        </h3>
+                        <div class="bg-slate-700/50 p-4 rounded-lg text-sm text-slate-200 font-mono mb-4 border border-slate-600 leading-relaxed relative z-10 backdrop-blur-sm">Manejamos varios métodos de pago para su facilidad:<br>• Datáfono (tarjeta)<br>• Mini cuotas y tasa cero<br>• SINPE Móvil<br>• Efectivo<br>• Transferencia bancaria</div>
+                        <button onclick="copyToClipboard(this)" class="w-full bg-white hover:bg-rose-50 text-slate-900 py-3 rounded-lg flex justify-center items-center gap-2 transition-all text-sm font-bold relative z-10">
+                            <i data-lucide="copy" class="w-4 h-4 text-rose-600"></i> Copiar Métodos de Pago
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed bottom-10 left-1/2 md:left-auto md:right-10 transform -translate-x-1/2 md:translate-x-0 bg-slate-900 text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 transition-all duration-300 translate-y-32 opacity-0 z-[60]">
+        <div class="bg-green-500 rounded-full p-1">
+            <i data-lucide="check" class="w-4 h-4 text-white"></i>
+        </div>
+        <div>
+            <span class="font-bold text-sm block">¡Copiado!</span>
+            <span class="text-xs text-slate-300">Listo para pegar en WhatsApp</span>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // 1. LÓGICA DE PERSONALIZACIÓN (Inyector de Nombres)
+        const nameInput = document.getElementById('patientNameInput');
+        
+        nameInput.addEventListener('input', function(e) {
+            const val = e.target.value.trim();
+            const targets = document.querySelectorAll('.name-target');
+            
+            targets.forEach(t => {
+                t.innerText = val ? val : '[Nombre]';
+                
+                if(val) {
+                    // Estilo cuando TIENE nombre (se camufla con el texto)
+                    t.classList.remove('text-rose-600', 'bg-rose-50');
+                    t.classList.add('text-slate-700', 'bg-transparent');
+                } else {
+                    // Estilo cuando NO hay nombre (resalta el placeholder)
+                    t.classList.add('text-rose-600', 'bg-rose-50');
+                    t.classList.remove('text-slate-700', 'bg-transparent');
+                }
+            });
+        });
+
+        // 2. LÓGICA DE ACCESIBILIDAD MÓVIL (Off-Canvas Sidebar)
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('sidebar-backdrop');
+            
+            // Toggle sidebar translate
+            sidebar.classList.toggle('-translate-x-full');
+            
+            // Toggle backdrop visibility
+            if (backdrop.classList.contains('hidden')) {
+                backdrop.classList.remove('hidden');
+                // Small delay to allow display:block to apply before changing opacity
+                setTimeout(() => backdrop.classList.remove('opacity-0'), 10);
+            } else {
+                backdrop.classList.add('opacity-0');
+                // Wait for transition before hiding
+                setTimeout(() => backdrop.classList.add('hidden'), 300);
+            }
+        }
+
+        // 3. LÓGICA DE COPIAR AL PORTAPAPELES
+        function copyToClipboard(button) {
+            const container = button.closest('div');
+            let textDiv = container.querySelector('.font-mono');
+            
+            if (!textDiv && button.previousElementSibling) {
+                 textDiv = button.previousElementSibling.querySelector('.font-mono') || button.parentElement.querySelector('.font-mono');
+            }
+
+            if (textDiv) {
+                // innerText recupera el texto renderizado (sin etiquetas HTML) pero respeta los saltos de línea. ¡Perfecto para WhatsApp!
+                const textToCopy = textDiv.innerText;
+                
+                // Usamos document.execCommand('copy') que es compatible con cualquier entorno o iframe
+                const textArea = document.createElement("textarea");
+                textArea.value = textToCopy;
+                
+                // Evitar saltos de pantalla al hacer focus
+                textArea.style.top = "0";
+                textArea.style.left = "0";
+                textArea.style.position = "fixed";
+                textArea.style.opacity = "0";
+                
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                
+                try {
+                    const successful = document.execCommand('copy');
+                    if (successful) {
+                        showToast();
+                        
+                        const originalContent = button.innerHTML;
+                        const originalClasses = button.className;
+                        
+                        button.innerHTML = `<i data-lucide="check" class="w-4 h-4"></i> ¡Copiado!`;
+                        button.classList.remove('bg-white', 'text-slate-600', 'hover:border-rose-600', 'bg-slate-800', 'hover:bg-rose-600');
+                        button.classList.add('bg-green-600', 'text-white', 'border-green-600');
+                        lucide.createIcons();
+
+                        setTimeout(() => {
+                            button.innerHTML = originalContent;
+                            button.className = originalClasses;
+                            lucide.createIcons();
+                        }, 2000);
+                    } else {
+                        console.error('No se pudo copiar el texto.');
+                        alert('Tu navegador bloqueó el copiado. Por favor, selecciona el texto manualmente.');
+                    }
+                } catch (err) {
+                    console.error('Error al ejecutar el comando de copia', err);
+                    alert('Tu navegador bloqueó el copiado. Por favor, selecciona el texto manualmente.');
+                }
+                
+                document.body.removeChild(textArea);
+            }
+        }
+
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.remove('translate-y-32', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-32', 'opacity-0');
+            }, 2500);
+        }
+    </script>
+</body>
+</html>
