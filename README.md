@@ -60,4 +60,4 @@ Abre index.html en cualquier navegador web moderno.
 
 ¡Listo! No requiere instalación de dependencias ni servidores locales.
 
-Desarrollado por [Tu Nombre/Usuario]Recursos interactivos realizados desde Gemini y su función "Canvas"
+Desarrollado por Tomás De la Cruz Segura
